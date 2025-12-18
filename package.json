@@ -94,7 +94,8 @@
     "init-json": "pnpm init-baseFiles",
     "prepare": "pnpm init-husky & pnpm init-baseFiles",
     "lint": "eslint",
-    "lint:fix": "eslint --fix"
+    "lint:fix": "eslint --fix",
+    "mock:server": "tsc -p mockServer/tsconfig.json && node mockServer/dist/main.js"
   },
   "dependencies": {
     "@alova/adapter-uniapp": "^2.0.14",

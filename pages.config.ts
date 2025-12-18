@@ -3,12 +3,19 @@ import { tabBar } from './src/tabbar/config'
 
 export default defineUniPages({
   globalStyle: {
-    navigationStyle: 'custom',
-    navigationBarTitleText: 'unibest',
-    navigationBarBackgroundColor: '#f8f8f8',
-    navigationBarTextStyle: 'black',
-    backgroundColor: '#FFFFFF',
-    bounce: 'none',
+    'navigationStyle': 'custom',
+    'navigationBarTitleText': 'unibest',
+    'navigationBarBackgroundColor': '#f8f8f8',
+    'navigationBarTextStyle': 'black',
+    'backgroundColor': '#FFFFFF',
+    'bounce': 'none',
+    'disableScroll': true,
+    'mp-alipay': {
+      transparentTitle: 'always',
+      titlePenetrate: 'yes',
+      defaultTitle: '',
+      allowsBounceVertical: 'no',
+    },
   },
   easycom: {
     autoscan: true,

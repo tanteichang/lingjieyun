@@ -15,39 +15,63 @@
     </TopNavigation>
   </Sticky>
   <view class="index-container">
-    <list-view style="padding-top: 200rpx" rebound="false" show-scrollbar="false">
+    <scroll-view rebound="false">
       <JobCategories
         @category-change="selectCategory"
         @filter-change="selectFilter"
       />
 
-      <Sticky
+      <wd-sticky
         id="tab-navigation"
         ref="tabNavigationRef"
         :offset-top="tabOffsetTop"
       >
-        <JobTabs @tab-click="selectTab" @job-click="handleJobClick" @filter-click="handleFilterClick" />
-      </Sticky>
-      <JobItem
-        v-for="(job, index) in jobList"
-        :key="index"
-        :job="job"
-        @click="navigateToDetail(job.id)"
-      />
-    </list-view>
+        <view class="tab-container">
+          <JobTabs
+            :tab-items="jobTabItems"
+            @tab-click="selectTab"
+            @job-click="handleJobClick"
+            @filter-click="handleFilterClick"
+          />
+        </view>
+      </wd-sticky>
+      <scroll-view
+        scroll-y
+        refresher-enabled
+        :refresher-triggered="refresherTriggered"
+        @refresherrefresh="handleRefresh"
+        @refresherrestore="handleRestore"
+      >
+        <template v-if="loading">
+          <JobItemSkeleton
+            v-for="index in skeletonCount"
+            :key="`job-skeleton-${index}`"
+          />
+        </template>
+        <template v-else>
+          <JobItem
+            v-for="(job, index) in jobList"
+            :key="index"
+            :job="job"
+            @click="navigateToDetail(job.id)"
+          />
+        </template>
+      </scroll-view>
+    </scroll-view>
   </view>
 </template>
 
 <script setup lang="ts">
 import type { Job, JobListResponse } from '@/types/job.d.ts'
 import { onMounted, onUnmounted, ref } from 'vue'
+import JobCategories from '@/components/common/JobCategories.vue'
 import JobItem from '@/components/common/JobItem.vue'
+import JobItemSkeleton from '@/components/common/JobItemSkeleton.vue'
+import JobTabs from '@/components/common/JobTabs.vue'
+import SearchBar from '@/components/common/SearchBar.vue'
 import TopNavigation from '@/components/common/TopNavigation.vue'
 import Sticky from '@/components/uview/Sticky.vue'
-import JobCategories from '@/pages/index/JobCategories.vue'
 import request from '@/utils/request'
-import JobTabs from './JobTabs.vue'
-import SearchBar from './SearchBar.vue'
 
 // 当前选择的城市
 const currentCity = ref<string>('北京')
@@ -61,9 +85,17 @@ const tabOffsetTop = ref<number>(0)
 // 横向滚动列表的引用
 const horizontalScrollListRef = ref<any>(null)
 
+const jobTabItems = [
+  { label: '推荐', value: 'recommend' },
+  { label: '附近', value: 'nearby' },
+  { label: '最新', value: 'latest' },
+]
+
 // 岗位列表数据
 const jobList = ref<Job[]>([])
 const loading = ref<boolean>(false)
+const skeletonCount = 4
+const refresherTriggered = ref<boolean>(false)
 
 // 显示城市选择器
 function showCityPicker(): void {
@@ -82,7 +114,7 @@ function selectCategory(index: number): void {
 
 // 选择标签页
 function selectTab(index: number): void {
-  console.log('选择了标签页:', ['推荐', '附近', '最新'][index])
+  console.log('选择了标签页:', jobTabItems[index]?.label || index)
   // 这里可以添加根据标签页筛选岗位列表的逻辑
 }
 
@@ -105,17 +137,17 @@ function selectFilter(filterType: string): void {
 
 // 跳转到岗位详情
 function navigateToDetail(jobId: string): void {
-  uni.navigateTo({ url: `/pages/job/detail?id=${jobId}` })
+  uni.navigateTo({ url: `/pages/project/detail?id=${jobId}` })
 }
 
 // 加载岗位列表
-async function loadJobs(): Promise<void> {
-  try {
-    loading.value = true
+function loadJobs(): Promise<Job[]> {
+  console.log('加载岗位列表')
+  loading.value = true
 
-    // 调用mock API获取岗位列表
-    const res = await request<JobListResponse>({
-      url: '/api/job/list',
+  return new Promise<Job[]>((resolve, reject) => {
+    request<JobListResponse>({
+      url: '/api/v1/job/list',
       method: 'GET',
       data: {
         page: 1,
@@ -125,33 +157,53 @@ async function loadJobs(): Promise<void> {
         sort: 'hot',
       },
     })
+      .then((res) => {
+        console.log('加载岗位列表成功:', res)
+        // 检查响应数据是否存在
+        if (res && res.list) {
+          jobList.value = res.list
+        }
+        else {
+          console.warn('岗位列表数据格式不正确:', res)
+          jobList.value = [] // 设置为空数组避免渲染错误
+        }
+        resolve(jobList.value)
+      })
+      .catch((error) => {
+        console.error('加载岗位列表失败:', error)
+        uni.showToast({
+          title: '加载失败，请重试',
+          icon: 'none',
+          duration: 2000,
+        })
+        jobList.value = [] // 设置为空数组避免渲染错误
+        reject(error)
+      })
+      .finally(() => {
+        loading.value = false
+      })
+  })
+}
 
-    // 检查响应数据是否存在
-    if (res && res.list) {
-      jobList.value = res.list
-    }
-    else {
-      console.warn('岗位列表数据格式不正确:', res)
-      jobList.value = [] // 设置为空数组避免渲染错误
-    }
-  }
-  catch (error) {
-    console.error('加载岗位列表失败:', error)
-    uni.showToast({
-      title: '加载失败，请重试',
-      icon: 'none',
-      duration: 2000,
-    })
-    jobList.value = [] // 设置为空数组避免渲染错误
-  }
-  finally {
-    loading.value = false
-  }
+function handleRefresh(): void {
+  console.log('下拉刷新')
+  // 刷新岗位列表
+  loadJobs().finally(() => {
+    console.log('刷新完成')
+    refresherTriggered.value = false
+  })
+}
+
+function handleRestore(): void {
+  console.log('上拉恢复')
 }
 
 onMounted(() => {
   // 页面加载时获取岗位列表
-  loadJobs()
+
+  loadJobs().finally(() => {
+    console.log('加载岗位列表完成')
+  })
 
   // 获取 top-navigation 的高度并设置到 tab-navigation 的 offset
   setTimeout(() => {
@@ -177,10 +229,16 @@ onUnmounted(() => {
 /* 页面容器 */
 .index-container {
   background-color: #f5f5f5;
+  height: calc(100vh - 150rpx);
+  overflow-y: scroll;
 }
 
 /* 岗位列表 */
 .job-list {
   padding: 0 30rpx 20rpx;
+}
+
+.tab-container {
+  width: 100vw;
 }
 </style>

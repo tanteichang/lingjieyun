@@ -69,7 +69,7 @@
           src="@/static/me/income.png"
           mode="scaleToFill"
         />
-        <text class="card-text">我的收入</text>
+        <text class="card-text">我的收益</text>
       </view>
       <view class="card-item" @click="handleCardClick('electronicAgreements')">
         <image
@@ -222,6 +222,25 @@ function handleFunctionClick(type: string) {
 
 // 点击卡片
 function handleCardClick(type: string) {
+  if (type === 'myResume') {
+    uni.navigateTo({
+      url: '/pages/me/my-resume',
+    })
+    return
+  }
+  if (type === 'myIncome') {
+    uni.navigateTo({
+      url: '/pages/me/my-income',
+    })
+    return
+  }
+  if (type === 'myProjects') {
+    uni.navigateTo({
+      url: '/pages/me/my-projects',
+    })
+    return
+  }
+
   // 映射英文参数到中文提示
   const typeMap: Record<string, string> = {
     myResume: '我的简历',
@@ -240,6 +259,13 @@ function handleCardClick(type: string) {
 
 // 点击常用服务
 function handleServiceClick(type: string) {
+  if (type === 'realNameAuthentication') {
+    uni.navigateTo({
+      url: '/pages/me/real-name-auth',
+    })
+    return
+  }
+
   // 英文参数到中文提示的映射
   const typeMap: Record<string, string> = {
     skillImprovement: '技能提升',

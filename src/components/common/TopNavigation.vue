@@ -66,12 +66,18 @@ onBeforeMount(() => {
 
 .status-bar {
   padding: 0 30rpx 20rpx;
+  /* #ifdef MP-ALIPAY */
+  padding-left: 80rpx;
+  /* #endif */
   color: white;
   display: flex;
   align-items: baseline;
 }
 
 .status-bar-title {
+  /* #ifdef MP-ALIPAY */
+  margin-top: 10rpx;
+  /* #endif */
   font-family: FZZhengHeiS-EB-GB;
   font-weight: 400;
   font-size: 40rpx;

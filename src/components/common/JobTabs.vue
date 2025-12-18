@@ -2,25 +2,13 @@
   <view class="section-header">
     <view class="section-tabs">
       <text
+        v-for="(tab, index) in props.tabItems"
+        :key="tab.label + tab.value"
         class="tab-item"
-        :class="{ active: selectedTab === 0 }"
-        @click="handleTabClick(0)"
+        :class="{ active: selectedTab === index }"
+        @click="handleTabClick(index)"
       >
-        推荐
-      </text>
-      <text
-        class="tab-item"
-        :class="{ active: selectedTab === 1 }"
-        @click="handleTabClick(1)"
-      >
-        附近
-      </text>
-      <text
-        class="tab-item"
-        :class="{ active: selectedTab === 2 }"
-        @click="handleTabClick(2)"
-      >
-        最新
+        {{ tab.label }}
       </text>
     </view>
     <view class="section-actions">
@@ -43,7 +31,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+
+interface TabItem {
+  label: string
+  value?: string | number
+}
+
+const props = defineProps<{
+  tabItems?: TabItem[]
+  defaultActive?: number
+}>()
 
 // 定义事件
 const emit = defineEmits<{
@@ -52,8 +50,11 @@ const emit = defineEmits<{
   (e: 'filter-click'): void
 }>()
 
+console.log('jobtabas')
+console.log('props', props)
+
 // 当前选中的标签页
-const selectedTab = ref<number>(0) // 0: 推荐, 1: 附近, 2: 最新
+const selectedTab = ref<number>(props.defaultActive ?? 0) // 0: 推荐, 1: 附近, 2: 最新
 
 // 当前激活的操作按钮
 const activeAction = ref<string | null>(null) // 'job' 或 'filter' 或 null

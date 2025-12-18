@@ -1,4 +1,6 @@
-export default [
+import type { Job } from '../../../../src/types/job.d.ts'
+
+export const jobList: Job[] = [
   {
     id: '1',
     title: '高级建筑工',
@@ -168,3 +170,5 @@ export default [
     createTime: '2023-06-04',
   },
 ]
+
+export default jobList

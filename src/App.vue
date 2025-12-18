@@ -22,5 +22,5 @@ onHide(() => {
 </script>
 
 <style lang="scss">
-
+@import '@/static/fonts/style.css';
 </style>

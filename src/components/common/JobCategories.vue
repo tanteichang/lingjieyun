@@ -72,7 +72,9 @@ function handleFilterClick(type: string): void {
 
 <style scoped>
 .job-categories {
-  background-color: #fff;
+  /* #ifdef MP-ALIPAY */
+  background: #fff;
+  /* #endif */
 }
 /* 分类导航 */
 .category-nav-wrapper {
@@ -88,6 +90,9 @@ function handleFilterClick(type: string): void {
   cursor: pointer;
   position: relative;
   min-width: 95rpx;
+  /* #ifdef MP-ALIPAY */
+  min-width: 100rpx;
+  /* #endif */
 }
 
 .category-icon {

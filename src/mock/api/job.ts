@@ -1,15 +1,13 @@
 import type { MockItem } from '../index'
 import type { Job, JobDetail } from '@/types/job'
-import mockJobDetailData from '../data/job-detail.js'
-
-// 从JS模块加载模拟数据
-import mockJobsData from '../data/job-list.js'
+import mockJobDetailData from '../../../mockServer/src/job/data/job-detail'
+import mockJobsData from '../../../mockServer/src/job/data/job-list'
 import { createResponse } from '../index'
 
 // 获取岗位列表接口Mock
 export const getJobListMock: MockItem = {
   request: {
-    url: '/api/job/list',
+    url: '/api/v1/job/list',
     method: 'GET',
   },
   response: (request: { params?: { page?: string | number, pageSize?: string | number, keyword?: string, category?: string, sort?: string } }) => {
@@ -73,7 +71,7 @@ export const getJobListMock: MockItem = {
 // 获取岗位详情接口Mock
 export const getJobDetailMock: MockItem = {
   request: {
-    url: '/api/job/detail',
+    url: '/api/v1/job/detail',
     method: 'GET',
   },
   response: (request: { params?: { id?: string } }) => {

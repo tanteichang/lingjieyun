@@ -1,4 +1,6 @@
-export default {
+import type { JobDetail } from '../../../../src/types/job.d.ts'
+
+export const jobDetail: JobDetail = {
   id: '1',
   title: '前端开发工程师',
   salary: '15K-25K',
@@ -13,4 +15,11 @@ export default {
   description: '1. 负责公司前端开发工作\n2. 熟悉HTML、CSS、JavaScript等前端技术\n3. 熟悉React、Vue等前端框架\n4. 具有良好的代码风格和团队合作精神',
   requirements: '1. 本科及以上学历，计算机相关专业\n2. 3年以上前端开发经验\n3. 熟悉前端工程化工具\n4. 具有良好的沟通能力和学习能力',
   benefits: '1. 五险一金\n2. 带薪年假\n3. 定期团建\n4. 年度体检',
+  contact: {
+    name: '张女士',
+    phone: '13800000000',
+    email: 'hr@example.com',
+  },
 }
+
+export default jobDetail

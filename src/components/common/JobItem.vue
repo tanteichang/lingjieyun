@@ -11,9 +11,9 @@
     </view>
 
     <view class="job-tags">
-      <text class="tag">月结</text>
-      <text class="tag">{{ job.workType }}</text>
-      <text class="tag">{{ job.address.split(' ')[0] }}</text>
+      <Tag text="月结" />
+      <Tag :text="job.workType" />
+      <Tag :text="job.address.split(' ')[0]" />
     </view>
 
     <view class="company-section">
@@ -33,6 +33,7 @@
 
 <script setup lang="ts">
 import type { Job } from '@/types/job'
+import Tag from '@/components/common/Tag.vue'
 
 // 定义组件属性
 const props = defineProps<{
@@ -100,6 +101,7 @@ function navigateToDetail(): void {
   display: flex;
   align-items: center;
   margin-bottom: 20rpx;
+  gap: 12rpx;
 }
 
 .tag {

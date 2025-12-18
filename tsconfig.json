@@ -47,7 +47,8 @@
     "src/**/*.tsx",
     "src/**/*.jsx",
     "src/**/*.vue",
-    "src/**/*.json"
+    "src/**/*.json",
+    "mockServer/src/job/data/**/*.ts"
   ],
   "exclude": [
     "node_modules",
