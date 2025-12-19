@@ -1,5 +1,5 @@
 <template>
-  <view class="top-navigation" :style="{ background }">
+  <view id="top-navigation" class="top-navigation" :style="{ background }">
     <!-- 顶部状态栏 -->
     <view class="status-bar" :style="statusBarStyle">
       <!-- 标题区域：优先使用插槽，否则使用props -->
@@ -89,18 +89,17 @@ onBeforeMount(() => {
 .status-bar-subtitle {
   font-family: PingFang SC;
   font-weight: bold;
-  font-size: 28rpx;
+  font-size: 24rpx;
   color: #ffffff;
   line-height: 34rpx;
   display: flex;
   align-items: center;
-  gap: 12rpx;
 }
 
 .divider {
   width: 1rpx;
   height: 19rpx;
   background: #dcdddd;
-  margin: 0 20rpx;
+  margin: 0 10rpx;
 }
 </style>

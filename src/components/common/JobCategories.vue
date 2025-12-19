@@ -73,8 +73,9 @@ function handleFilterClick(type: string): void {
 <style scoped>
 .job-categories {
   /* #ifdef MP-ALIPAY */
-  background: #fff;
+
   /* #endif */
+  background: #fff;
 }
 /* 分类导航 */
 .category-nav-wrapper {

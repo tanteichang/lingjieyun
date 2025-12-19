@@ -1,19 +1,17 @@
 <template>
-  <Sticky>
-    <TopNavigation
-      id="top-navigation"
-      title="灵捷云"
-      subtitle="科技为基 合规为本 拥军为魂"
-      background="linear-gradient(to bottom, #155FE2 0%, #ffffff 100%)"
-    >
-      <!-- 顶部搜索栏 -->
-      <SearchBar
-        :current-city="currentCity"
-        @city-click="showCityPicker"
-        @search-click="showSearch"
-      />
-    </TopNavigation>
-  </Sticky>
+  <TopNavigation
+    id="top-navigation"
+    title="灵捷云"
+    subtitle="科技为基 合规为本 拥军为魂"
+    background="linear-gradient(to bottom, #155FE2 0%, #ffffff 100%)"
+  >
+    <!-- 顶部搜索栏 -->
+    <SearchBar
+      :current-city="currentCity"
+      @city-click="showCityPicker"
+      @search-click="showSearch"
+    />
+  </TopNavigation>
   <view class="index-container">
     <scroll-view rebound="false">
       <JobCategories
@@ -212,7 +210,10 @@ onMounted(() => {
       .createSelectorQuery()
       .select('#top-navigation')
       .boundingClientRect((ret: UniApp.NodeInfo) => {
+        console
+          .log(ret)
         if (ret) {
+          console.log('top-navigation 高度x:', ret.height)
           tabOffsetTop.value = ret.height
         }
       })
