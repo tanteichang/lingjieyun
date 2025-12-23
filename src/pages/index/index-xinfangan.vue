@@ -3,7 +3,7 @@
     id="top-navigation"
     title="灵捷云"
     subtitle="科技为基 合规为本 拥军为魂"
-    background="linear-gradient(to bottom, #155FE2 0%,  #cbdbf9 100%)"
+    background="linear-gradient(to bottom, #155FE2 0%, #ffffff 60%)"
   >
     <!-- 顶部搜索栏 -->
     <SearchBar
@@ -11,30 +11,41 @@
       @city-click="showCityPicker"
       @search-click="showSearch"
     />
+    <view
+      id="job-categories"
+      class="job-categories"
+      :class="{ 'job-categories--hidden': isJobCategoriesHidden }"
+      :style="jobCategoriesVars"
+    >
+      <JobCategories
+        @category-change="selectCategory"
+        @filter-change="selectFilter"
+      />
+    </view>
   </TopNavigation>
-  <view class="index-container" :style="indexContainerStyle">
+  <view class="index-container">
+    <wd-sticky
+      id="tab-navigation"
+      ref="tabNavigationRef"
+      :offset-top="tabOffsetTop"
+    />
+    <view class="tab-container">
+      <JobTabs
+        :tab-items="jobTabItems"
+        @tab-click="selectTab"
+        @job-click="handleJobClick"
+        @filter-click="handleFilterClick"
+      />
+    </view>
+
     <PullList
       ref="pullListRef"
       refresher-enabled
       :refreshing="refreshing"
+      @scroll="handleListScroll"
       @refresh="handleRefresh"
       @refresherrestore="handleRestore"
     >
-      <view style="background: linear-gradient(to bottom,  #cbdbf9 0%, #ffffff 30%);">
-        <JobCategories
-          @category-change="selectCategory"
-          @filter-change="selectFilter"
-        />
-      </view>
-
-      <view class="tab-container">
-        <JobTabs
-          :tab-items="jobTabItems"
-          @tab-click="selectTab"
-          @job-click="handleJobClick"
-          @filter-click="handleFilterClick"
-        />
-      </view>
       <template v-if="loading">
         <JobItemSkeleton
           v-for="index in skeletonCount"
@@ -62,12 +73,16 @@ import JobItemSkeleton from '@/components/common/JobItemSkeleton.vue'
 import JobTabs from '@/components/common/JobTabs.vue'
 import PullList from '@/components/common/PullList.vue'
 import SearchBar from '@/components/common/SearchBar.vue'
-import Sticky from '@/components/common/Sticky.vue'
 import TopNavigation from '@/components/common/TopNavigation.vue'
 import request from '@/utils/request'
 
 const refreshing = ref<boolean>(false)
 const pullListRef = ref<InstanceType<typeof PullList> | null>(null)
+const isJobCategoriesHidden = ref(false)
+const jobCategoriesVars = computed(() => ({
+  '--tab-offset': `${tabOffsetTop.value}rpx`,
+}))
+const CATEGORY_HIDE_THRESHOLD = 120
 // 当前选择的城市
 const currentCity = ref<string>('北京')
 
@@ -91,12 +106,6 @@ const jobList = ref<Job[]>([])
 const loading = ref<boolean>(false)
 const skeletonCount = 4
 const refresherTriggered = ref<boolean>(false)
-const indexContainerStyle = computed(() => {
-  const offset = tabOffsetTop.value || 0
-  return {
-    height: `calc(100vh - ${offset}px)`,
-  }
-})
 
 // 显示城市选择器
 function showCityPicker(): void {
@@ -202,6 +211,14 @@ function handleRestore(): void {
   console.log('上拉恢复')
 }
 
+function handleListScroll(scrollTop: number): void {
+  const shouldHide = scrollTop > CATEGORY_HIDE_THRESHOLD
+  if (shouldHide === isJobCategoriesHidden.value) {
+    return
+  }
+  isJobCategoriesHidden.value = shouldHide
+}
+
 onMounted(() => {
   // 页面加载时获取岗位列表
 
@@ -211,19 +228,18 @@ onMounted(() => {
 
   // 获取 top-navigation 的高度并设置到 tab-navigation 的 offset
   setTimeout(() => {
-    // 获取 top-navigation 元素的位置信息
-    uni
-      .createSelectorQuery()
+    // 获取 top-navigation 元素和岗位分类高度
+    const query = uni.createSelectorQuery()
+    query
       .select('#top-navigation')
       .boundingClientRect((ret: UniApp.NodeInfo) => {
-        console
-          .log(ret)
         if (ret) {
-          console.log('top-navigation 高度x:', ret.height)
+          console.log('top-navigation 高度:', ret.height)
+          console.log('tabOffsetTop', tabOffsetTop.value)
           tabOffsetTop.value = ret.height
         }
       })
-      .exec()
+    query.exec()
   }, 0)
 })
 
@@ -236,7 +252,7 @@ onUnmounted(() => {
 /* 页面容器 */
 .index-container {
   background-color: #f5f5f5;
-  overflow-y: scroll;
+  height: calc(100vh - 150rpx);
 }
 
 /* 岗位列表 */
@@ -246,9 +262,18 @@ onUnmounted(() => {
 
 .tab-container {
   width: 100vw;
-  position: sticky;
-  top: 0;
-  background-color: #ffffff;
-  z-index: 100;
+}
+
+.job-categories {
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease,
+    margin-bottom 0.3s ease;
+}
+
+.job-categories--hidden {
+  transform: translateY(-20rpx);
+  opacity: 0;
+  margin-bottom: calc(-1 * var(--tab-offset, 0rpx));
 }
 </style>

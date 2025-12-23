@@ -143,6 +143,6 @@ function handleFilterClick(): void {
 .tab-item.active {
   color: #121212;
   font-weight: bold;
-  font-size: 40rpx;
+  font-size: 30rpx;
 }
 </style>

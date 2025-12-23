@@ -1,12 +1,12 @@
 <template>
   <view class="horizontal-scroll-container">
-    <scroll-view class="horizontal-scroll-view" scroll-x @scroll="handleScroll">
+    <scroll-view class="horizontal-scroll-view" scroll-x :show-scrollbar="false" @scroll="handleScroll">
       <view class="horizontal-scroll-content">
         <slot />
       </view>
     </scroll-view>
     <!-- 指示条 -->
-    <view class="indicator-bar">
+    <view v-if="showIndicator" class="indicator-bar">
       <view
         class="indicator-content"
         :style="{
@@ -19,7 +19,15 @@
 </template>
 
 <script setup lang="ts">
-import { getCurrentInstance, onMounted, ref } from 'vue'
+import { getCurrentInstance, onMounted, ref, toRef } from 'vue'
+
+const props = defineProps({
+  showIndicator: {
+    type: Boolean,
+    default: true,
+  },
+})
+const showIndicator = toRef(props, 'showIndicator')
 
 const scrollbarWidth = ref(0)
 const containerWidth = ref(0)

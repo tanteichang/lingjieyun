@@ -1,95 +1,114 @@
 <template>
-  <view class="login-container">
-    <!-- 顶部背景渐变 -->
-    <view class="top-gradient" />
-
-    <!-- 登录内容区 -->
-    <view class="login-content">
-      <!-- 应用logo -->
-      <view class="logo-container">
-        <view class="logo">
-          <view class="logo-blue" />
-          <view class="logo-green" />
-          <view class="logo-dot" />
+  <fixedLayout background="linear-gradient(to bottom, #87a3ff 0%, #fff 30%);">
+    <template #header>
+      <TopNavbar
+        title=""
+        transparent-background
+        theme-color="black"
+        @click-left="goBack"
+      />
+    </template>
+    <view class="login-container">
+      <!-- 登录内容区 -->
+      <view class="login-content">
+        <!-- 应用logo -->
+        <view class="logo-container">
+          <view class="logo">
+            <view class="logo-blue" />
+            <view class="logo-green" />
+            <view class="logo-dot" />
+          </view>
         </view>
-      </view>
 
-      <!-- 登录标题 -->
-      <view class="login-title">
-        <text class="title-text">登录灵捷云平台</text>
-        <text class="subtitle-text">灵捷云统一管理本人账号信息</text>
-      </view>
-
-      <!-- 一键快捷登录按钮 -->
-      <view class="login-button-container">
-        <button class="login-button" @click="handleQuickLogin">
-          一键快捷登录
-        </button>
-      </view>
-
-      <!-- 协议同意 -->
-      <view class="agreement-container">
-        <wd-checkbox
-          v-model="agreementChecked"
-          checked-color="#155fe2"
-          @toggle="agreementChecked = !agreementChecked"
-        />
-        <text class="agreement-text">
-          已阅读并同意
-          <text class="agreement-link" @click="handleAgreementClick('service')">《灵捷云服务协议》</text>
-          和
-          <text class="agreement-link" @click="handleAgreementClick('privacy')">《隐私政策》</text>
-          ，允许灵捷云统一管理本人账号信息
-        </text>
-      </view>
-    </view>
-
-    <!-- 登录权益（移到底部） -->
-    <view class="benefits-container">
-      <text class="benefits-title">- 登录后您将获得一下权益 -</text>
-      <view class="benefits-list">
-        <view class="benefit-item">
-          <image class="benefit-icon" src="/static/login/project.png" mode="scaleToFill" />
-          <text class="benefit-text">优质项目</text>
+        <!-- 登录标题 -->
+        <view class="login-title">
+          <text class="title-text">登录灵捷云平台</text>
+          <text class="subtitle-text">灵捷云统一管理本人账号信息</text>
         </view>
-        <view class="benefit-item">
-          <image class="benefit-icon" src="/static/login/info.png" mode="scaleToFill" />
-          <text class="benefit-text">行业信息</text>
+
+        <!-- 一键快捷登录按钮 -->
+        <view class="login-button-container">
+          <button class="login-button" @click="handleQuickLogin">
+            一键快捷登录
+          </button>
         </view>
-        <view class="benefit-item">
-          <image class="benefit-icon" src="/static/login/tax.png" mode="scaleToFill" />
-          <text class="benefit-text">专业报税</text>
-        </view>
-        <view class="benefit-item">
-          <image class="benefit-icon" src="/static/login/customer.png" mode="scaleToFill" />
-          <text class="benefit-text">专属客服</text>
+
+        <!-- 协议同意 -->
+        <view class="agreement-container">
+          <wd-checkbox
+            v-model="agreementChecked"
+            checked-color="#155fe2"
+            @toggle="agreementChecked = !agreementChecked"
+          />
+          <text class="agreement-text">
+            已阅读并同意
+            <text class="agreement-link" @click="handleAgreementClick('service')">《灵捷云服务协议》</text>
+            和
+            <text class="agreement-link" @click="handleAgreementClick('privacy')">《隐私政策》</text>
+            ，允许灵捷云统一管理本人账号信息
+          </text>
         </view>
       </view>
     </view>
-
-    <!-- 温馨提示弹窗 -->
-    <wd-popup v-model="showAgreementPopup" position="bottom" :safe-area-inset-bottom="true">
-      <view class="popup-content">
-        <text class="popup-title">温馨提示</text>
-        <text class="popup-message">
-          请阅读并同意<text class="agreement-link" @click="handleAgreementClick('service')">《灵捷云服务协议》</text>和<text class="agreement-link" @click="handleAgreementClick('privacy')">《隐私政策》</text>，允许灵捷云统一管理本人账号信息
-        </text>
-        <button class="popup-button" @click="handleAgreeAndLogin">
-          同意并登录
-        </button>
+    <template #footer>
+      <view class="benefits-container">
+        <text class="benefits-title">- 登录后您将获得以下权益 -</text>
+        <view class="benefits-list">
+          <view class="benefit-item">
+            <view class="benefit-icon">
+              <span class="icon-_project" style="font-size: 46rpx;" />
+            </view>
+            <text class="benefit-text">优质项目</text>
+          </view>
+          <view class="benefit-item">
+            <view class="benefit-icon">
+              <span class="icon-_newspaper" style="font-size: 46rpx;" />
+            </view>
+            <text class="benefit-text">行业信息</text>
+          </view>
+          <view class="benefit-item">
+            <view class="benefit-icon">
+              <span class="icon-_tax" style="font-size: 46rpx;" />
+            </view>
+            <text class="benefit-text">专业报税</text>
+          </view>
+          <view class="benefit-item">
+            <view class="benefit-icon">
+              <span class="icon-_customer_service" style="font-size: 46rpx;" />
+            </view>
+            <text class="benefit-text">专属客服</text>
+          </view>
+        </view>
       </view>
-    </wd-popup>
-  </view>
+    </template>
+  </fixedLayout>
+
+  <!-- 温馨提示弹窗 -->
+  <wd-popup v-model="showAgreementPopup" position="bottom" :safe-area-inset-bottom="true">
+    <view class="popup-content">
+      <text class="popup-title">温馨提示</text>
+      <text class="popup-message">
+        请阅读并同意<text class="agreement-link" @click="handleAgreementClick('service')">《灵捷云服务协议》</text>和<text class="agreement-link" @click="handleAgreementClick('privacy')">《隐私政策》</text>，允许灵捷云统一管理本人账号信息
+      </text>
+      <button class="popup-button" @click="handleAgreeAndLogin">
+        同意并登录
+      </button>
+    </view>
+  </wd-popup>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-
+import TopNavbar from '@/components/common/TopNavbar.vue'
+import fixedLayout from '@/layouts/fixed-layout.vue'
 // 协议同意状态
 const agreementChecked = ref(false)
 // 弹窗显示状态
 const showAgreementPopup = ref(false)
 
+function goBack() {
+  uni.navigateBack()
+}
 // 一键快捷登录处理函数
 function handleQuickLogin() {
   if (!agreementChecked.value) {
@@ -127,12 +146,9 @@ function handleAgreementClick(type: string) {
 
 <style scoped>
 .login-container {
-  width: 100vw;
-  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: linear-gradient(to bottom, #155fe2 0%, #ffffff 18%);
   position: relative;
 }
 
@@ -336,7 +352,12 @@ function handleAgreementClick(type: string) {
 .benefit-icon {
   width: 80rpx;
   height: 80rpx;
+  border-radius: 40rpx;
   margin-bottom: 24rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f7f7f7;
 }
 
 .benefit-text {

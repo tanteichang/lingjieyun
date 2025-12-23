@@ -1,16 +1,28 @@
 <template>
-  <TopNavigation title="项目广场">
+  <TopNavigation
+    title="项目广场"
+    background="linear-gradient(to bottom, #155FE2 0%,  #ffffff 80%)"
+  >
     <!-- 顶部搜索栏 -->
     <SearchBar
       :current-city="currentCity"
       @city-click="showCityPicker"
       @search-click="showSearch"
     />
-    <!-- 岗位分类标签页 -->
-    <view style="margin-top: 10rpx;">
-      <JobTabs :tab-items="jobTabItems" />
-    </view>
+    <HorizontalScrollList :show-indicator="false">
+      <view
+        v-for="(category, index) in categories"
+        :key="category.key"
+        class="category-item"
+        :class="{ active: selectedCategory === index }"
+        @click="handleCategoryClick(index)"
+      >
+        <text class="category-name">{{ category.name }}</text>
+      </view>
+    </HorizontalScrollList>
   </TopNavigation>
+  <!-- 岗位分类标签页 -->
+  <JobTabs :tab-items="jobTabItems" />
   <view class="square-content">
     <PullList
       ref="pullListRef"
@@ -40,6 +52,7 @@
 <script setup lang="ts">
 import type { Job, JobListResponse } from '@/types/job.d.ts'
 import { onMounted, ref } from 'vue'
+import HorizontalScrollList from '@/components/common/HorizontalScrollList.vue'
 import JobItem from '@/components/common/JobItem.vue'
 import JobItemSkeleton from '@/components/common/JobItemSkeleton.vue'
 import JobTabs from '@/components/common/JobTabs.vue'
@@ -48,6 +61,7 @@ import SearchBar from '@/components/common/SearchBar.vue'
 import TopNavigation from '@/components/common/TopNavigation.vue'
 import request from '@/utils/request'
 
+const selectedCategory = ref(2)
 const currentCity = ref<string>('北京')
 const loading = ref<boolean>(false)
 const jobList = ref<Job[]>([])
@@ -58,6 +72,21 @@ const isLoadingMore = ref(false)
 const page = ref(1)
 const pageSize = 10
 const refreshing = ref<boolean>(false)
+
+const categories = [
+  { key: 'all', name: '全部' },
+  { key: 'frontend', name: '前端' },
+  { key: 'backend', name: '后端' },
+  { key: 'mobile', name: '移动开发' },
+  { key: 'ui-ux', name: 'UI/UX' },
+  { key: 'product', name: '产品' },
+  { key: 'test', name: '测试' },
+  { key: 'other', name: '其他' },
+]
+// 处理分类点击事件
+function handleCategoryClick(index: number): void {
+  selectedCategory.value = index
+}
 
 // 显示城市选择器
 function showCityPicker(): void {
@@ -185,6 +214,7 @@ onMounted(() => {
 .square-content {
   height: calc(100vh - 400rpx);
   background-color: #f5f5f5;
+  padding-top: 20rpx;
 }
 
 .skeleton-container,
@@ -192,6 +222,25 @@ onMounted(() => {
   width: 100%;
   padding: 0 16rpx;
   box-sizing: border-box;
+}
+
+.category-item {
+  font-weight: 800;
+  font-size: 30rpx;
+  color: #939393;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12rpx 30rpx;
+  cursor: pointer;
+  position: relative;
+  text-align: center;
+  white-space: nowrap;
+}
+.category-item.active {
+  font-size: 40rpx;
+  font-weight: 800;
+  color: #1c1c1c;
 }
 
 .skeleton-container :deep(.job-item-skeleton) {

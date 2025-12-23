@@ -1,5 +1,5 @@
 <template>
-  <view class="fixed-layout">
+  <view class="fixed-layout" :style="layoutStyle">
     <!-- 顶部导航区域 -->
     <view
       class="fixed-layout__header"
@@ -34,6 +34,10 @@
 export default {
   name: 'FixedLayout',
   props: {
+    background: {
+      type: String,
+      default: 'transparent',
+    },
     headerBgColor: {
       type: String,
       default: 'transparent',
@@ -44,6 +48,9 @@ export default {
     },
   },
   computed: {
+    layoutStyle() {
+      return { background: this.background || 'transparent' }
+    },
     headerStyle() {
       return { backgroundColor: this.headerBgColor || 'transparent' }
     },

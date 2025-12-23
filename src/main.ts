@@ -10,7 +10,10 @@ import { routeInterceptor } from './router/interceptor'
 import store from './store'
 
 import logger from './utils/logger'
+import RouterInterceptor from './utils/routerInterceptor'
+
 import '@/style/index.scss'
+
 import 'virtual:uno.css'
 
 export function createApp() {
@@ -22,10 +25,13 @@ export function createApp() {
   app.config.globalProperties.$logger = logger
   logger.info('Vue3应用启动', { version: '1.0.0' })
 
+  RouterInterceptor.init()
+
   // 开发环境启用Mock功能
   if (process.env.NODE_ENV === 'development') {
     setMockEnabled(true)
     addMocks([...userMocks, ...jobMocks])
+
     logger.info('Mock功能已启用')
   }
   else {

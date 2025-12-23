@@ -1,13 +1,20 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import type { ApiResponse, RouteDefinition, RouteHandler, RouteResult } from './router.js'
 import http from 'node:http'
+import { readFileSync } from 'node:fs'
 import { URL } from 'node:url'
 import { jobRoutes } from './job/index.js'
+import { userRoutes } from './user/index.js'
 import { createRouteKey } from './router.js'
+import { authRoutes } from './auth/index.js'
 
 const PORT = Number(process.env.MOCK_SERVER_PORT || 3300)
 const HOST = process.env.MOCK_SERVER_HOST || '0.0.0.0'
 const DEFAULT_DELAY = Math.max(0, Number(process.env.MOCK_SERVER_DELAY || 0))
+const HTML_ROUTES = new Map([
+  ['/mock/html/service.html', readFileSync(new URL('./user/html/service.html', import.meta.url), 'utf8')],
+  ['/mock/html/privacy.html', readFileSync(new URL('./user/html/privacy.html', import.meta.url), 'utf8')],
+])
 
 function setCommonHeaders(res: ServerResponse): void {
   res.setHeader('Content-Type', 'application/json; charset=utf-8')
@@ -21,6 +28,12 @@ function sendJson<T>(res: ServerResponse, statusCode: number, payload: ApiRespon
   res.end(JSON.stringify(payload))
 }
 
+function sendHtml(res: ServerResponse, statusCode: number, html: string): void {
+  res.statusCode = statusCode
+  res.setHeader('Content-Type', 'text/html; charset=utf-8')
+  res.end(html)
+}
+
 const routeTable = new Map<string, RouteHandler>()
 
 function registerRoutes(routeDefs: RouteDefinition[]): void {
@@ -31,6 +44,8 @@ function registerRoutes(routeDefs: RouteDefinition[]): void {
 }
 
 registerRoutes(jobRoutes)
+registerRoutes(userRoutes)
+registerRoutes(authRoutes)
 
 function routeRequest(req: IncomingMessage, res: ServerResponse): void {
   if (!req.url) {
@@ -44,6 +59,12 @@ function routeRequest(req: IncomingMessage, res: ServerResponse): void {
 
   const requestUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`)
   const { pathname, searchParams } = requestUrl
+  const htmlPayload = HTML_ROUTES.get(pathname)
+
+  if (htmlPayload) {
+    sendHtml(res, 200, htmlPayload)
+    return
+  }
 
   const method = (req.method || 'GET').toUpperCase()
   const routeKey = createRouteKey(method, pathname)

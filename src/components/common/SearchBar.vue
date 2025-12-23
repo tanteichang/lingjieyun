@@ -28,7 +28,7 @@ const emit = defineEmits<{
 <style scoped>
 /* 顶部搜索栏 */
 .search-bar {
-  padding: 30rpx 20rpx 0 20rpx;
+  padding: 30rpx 20rpx 20rpx 20rpx;
   height: 80rpx;
   display: flex;
   align-items: center;

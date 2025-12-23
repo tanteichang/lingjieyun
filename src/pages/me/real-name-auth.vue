@@ -84,6 +84,7 @@ import fixedLayout from '@/layouts/fixed-layout.vue'
 
 definePage({
   navigationStyle: 'custom',
+  needLogin: true,
 })
 
 const statusBarHeight = ref('40px')

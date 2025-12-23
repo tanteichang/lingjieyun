@@ -1,67 +1,84 @@
 <template>
-  <ScrollFadeLayout
-    header-color="transparent"
-    layout-background="linear-gradient(to bottom, #155fe2 0%, #f5f5f5 40%);"
-  >
+  <ScrollFadeLayout>
     <template #header>
-      <TopNavigation
-        title="我的"
-        status-bar-style="dark"
-        background="transparent"
-      />
+      <TopNavigation />
     </template>
-    <view class="header">
-      <view class="user-info">
-        <view class="avatar" @click="handleLogin">
-          <image src="@/static/me/avatar.png" mode="scaleToFill" />
+  </ScrollFadeLayout>
+  <view class="me-page">
+    <TopNavigation>
+      <!-- 顶部登录区域 -->
+      <view class="header">
+        <view class="user-info">
+          <view class="avatar" @click="handleLogin">
+            <image
+              src="@/static/me/avatar.png"
+              mode="scaleToFill"
+            />
+          </view>
+          <view class="login-area" @click="handleLogin">
+            <text class="login-title">点击登陆/注册</text>
+            <text class="login-subtitle">可解锁全部信息</text>
+          </view>
         </view>
-        <view class="login-area" @click="handleLogin">
-          <text class="login-title">点击登陆/注册</text>
-          <text class="login-subtitle">可解锁全部信息</text>
+        <view class="switch-identity" @click="handleSwitchIdentity">
+          <span class="icon-_switch" style="font-size: 22rpx;" />
+          <text>切换身份</text>
         </view>
       </view>
-      <view class="switch-identity" @click="handleSwitchIdentity">
-        <span class="icon-_switch" style="font-size: 22rpx;" />
-        <text>切换身份</text>
-      </view>
-    </view>
 
-    <!-- 功能入口 -->
-    <view class="function-entries">
-      <view class="entry-item" @click="handleFunctionClick('报名')">
-        <text class="entry-icon">**</text>
-        <text class="entry-text">报名</text>
+      <!-- 功能入口 -->
+      <view class="function-entries">
+        <view class="entry-item" @click="handleFunctionClick('报名')">
+          <text class="entry-icon">**</text>
+          <text class="entry-text">报名</text>
+        </view>
+        <view class="entry-item" @click="handleFunctionClick('收藏')">
+          <text class="entry-icon">**</text>
+          <text class="entry-text">收藏</text>
+        </view>
+        <view class="entry-item" @click="handleFunctionClick('签约')">
+          <text class="entry-icon">**</text>
+          <text class="entry-text">签约</text>
+        </view>
+        <view class="entry-item" @click="handleFunctionClick('足迹')">
+          <text class="entry-icon">**</text>
+          <text class="entry-text">足迹</text>
+        </view>
       </view>
-      <view class="entry-item" @click="handleFunctionClick('收藏')">
-        <text class="entry-icon">**</text>
-        <text class="entry-text">收藏</text>
-      </view>
-      <view class="entry-item" @click="handleFunctionClick('签约')">
-        <text class="entry-icon">**</text>
-        <text class="entry-text">签约</text>
-      </view>
-      <view class="entry-item" @click="handleFunctionClick('足迹')">
-        <text class="entry-icon">**</text>
-        <text class="entry-text">足迹</text>
-      </view>
-    </view>
+    </TopNavigation>
 
     <!-- 卡片区域 -->
     <view class="card-section">
       <view class="card-item" @click="handleCardClick('myResume')">
-        <image class="card-icon" src="@/static/me/resume.png" mode="scaleToFill" />
+        <image
+          class="card-icon"
+          src="@/static/me/resume.png"
+          mode="scaleToFill"
+        />
         <text class="card-text">我的简历</text>
       </view>
       <view class="card-item" @click="handleCardClick('myProjects')">
-        <image class="card-icon" src="@/static/me/project.png" mode="scaleToFill" />
+        <image
+          class="card-icon"
+          src="@/static/me/project.png"
+          mode="scaleToFill"
+        />
         <text class="card-text">我的项目</text>
       </view>
       <view class="card-item" @click="handleCardClick('myIncome')">
-        <image class="card-icon" src="@/static/me/income.png" mode="scaleToFill" />
+        <image
+          class="card-icon"
+          src="@/static/me/income.png"
+          mode="scaleToFill"
+        />
         <text class="card-text">我的收益</text>
       </view>
       <view class="card-item" @click="handleCardClick('electronicAgreements')">
-        <image class="card-icon" src="@/static/me/agreement.png" mode="scaleToFill" />
+        <image
+          class="card-icon"
+          src="@/static/me/agreement.png"
+          mode="scaleToFill"
+        />
         <text class="card-text">电子协议</text>
       </view>
     </view>
@@ -79,47 +96,31 @@
       <text class="section-title">常用服务</text>
       <view class="section-grid">
         <view class="section-item" @click="handleServiceClick('skillImprovement')">
-          <span class="icon-_skill"><span class="path1" /><span class="path2" /></span>
+          <span class="icon-_skill" style="font-size: 50rpx;"><span class="path1" /><span class="path2" /></span>
           <text class="section-text">技能提升</text>
         </view>
         <view class="section-item" @click="handleServiceClick('realNameAuthentication')">
-          <span class="icon-_user-positioning"><span class="path1" /><span
-            class="path2"
-          /><span class="path3" /><span class="path4" /><span class="path5" /><span
-            class="path6"
-          /></span>
+          <span class="icon-_user-positioning" style="font-size: 50rpx;"><span class="path1" /><span class="path2" /><span class="path3" /><span class="path4" /><span class="path5" /><span class="path6" /></span>
           <text class="section-text">实名认证</text>
         </view>
         <view class="section-item" @click="handleServiceClick('registrationRecords')">
-          <span class="icon-_schedule"><span class="path1" /><span class="path2" /><span class="path3" /><span
-            class="path4"
-          /><span class="path5" /></span>
+          <span class="icon-_schedule"><span class="path1" /><span class="path2" /><span class="path3" /><span class="path4" /><span class="path5" /></span>
           <text class="section-text">报名记录</text>
         </view>
         <view class="section-item" @click="handleServiceClick('settlementList')">
-          <span class="icon-_currency"><span class="path1" /><span class="path2" /><span class="path3" /><span
-            class="path4"
-          /><span class="path5" /><span class="path6" /><span class="path7" /><span
-            class="path8"
-          /></span>
+          <span class="icon-_currency"><span class="path1" /><span class="path2" /><span class="path3" /><span class="path4" /><span class="path5" /><span class="path6" /><span class="path7" /><span class="path8" /></span>
           <text class="section-text">结算清单</text>
         </view>
         <view class="section-item" @click="handleServiceClick('customerService')">
-          <span class="icon-_message-one"><span class="path1" /><span class="path2" /><span class="path3" /><span
-            class="path4"
-          /></span>
+          <span class="icon-_message-one"><span class="path1" /><span class="path2" /><span class="path3" /><span class="path4" /></span>
           <text class="section-text">客服</text>
         </view>
         <view class="section-item" @click="handleServiceClick('myBankCards')">
-          <span class="icon-_bank-card"><span class="path1" /><span class="path2" /><span class="path3" /><span
-            class="path4"
-          /><span class="path5" /></span>
+          <span class="icon-_bank-card"><span class="path1" /><span class="path2" /><span class="path3" /><span class="path4" /><span class="path5" /></span>
           <text class="section-text">我的银行卡</text>
         </view>
         <view class="section-item" @click="handleServiceClick('aboutUs')">
-          <span class="icon-_peoples"><span class="path1" /><span class="path2" /><span class="path3" /><span
-            class="path4"
-          /></span>
+          <span class="icon-_peoples"><span class="path1" /><span class="path2" /><span class="path3" /><span class="path4" /></span>
           <text class="section-text">关于我们</text>
         </view>
       </view>
@@ -130,17 +131,11 @@
       <text class="section-title">便民工具</text>
       <view class="section-grid">
         <view class="section-item" @click="handleToolClick('personsFundCalculation')">
-          <span class="icon-_wheelchair"><span class="path1" /><span class="path2" /><span class="path3" /><span
-            class="path4"
-          /></span>
+          <span class="icon-_wheelchair"><span class="path1" /><span class="path2" /><span class="path3" /><span class="path4" /></span>
           <text class="section-text">残保金计算</text>
         </view>
         <view class="section-item" @click="handleToolClick('socialSecurityFoundCalculation')">
-          <span class="icon-_calculator-one"><span class="path1" /><span class="path2" /><span class="path3" /><span
-            class="path4"
-          /><span class="path5" /><span class="path6" /><span class="path7" /><span
-            class="path8"
-          /><span class="path9" /><span class="path10" /><span class="path11" /></span>
+          <span class="icon-_calculator-one"><span class="path1" /><span class="path2" /><span class="path3" /><span class="path4" /><span class="path5" /><span class="path6" /><span class="path7" /><span class="path8" /><span class="path9" /><span class="path10" /><span class="path11" /></span>
           <text class="section-text">社保计算</text>
         </view>
         <view class="section-item" @click="handleToolClick('personalTaxCalculation')">
@@ -156,12 +151,12 @@
         <text class="logout-text">退出登录</text>
       </view>
     </view>
-  </ScrollFadeLayout>
+  </view>
 </template>
 
 <script setup lang="ts">
+// 个人中心页面
 import TopNavigation from '@/components/common/TopNavigation.vue'
-import ScrollFadeLayout from '@/layouts/scroll-fade-layout.vue'
 
 // 点击登录/注册
 function handleLogin() {
@@ -276,7 +271,7 @@ function handleLogout() {
         uni.removeStorageSync('token')
         uni.removeStorageSync('userInfo')
         // 跳转到首页
-        uni.switchTab({
+        uni.navigateTo({
           url: '/pages/index/index',
         })
         uni.showToast({
@@ -290,10 +285,16 @@ function handleLogout() {
 </script>
 
 <style scoped>
+.me-page {
+  background-color: #f5f5f5;
+  overflow: scroll;
+  height: 100vh;
+}
+
 /* 顶部登录区域 */
 .header {
   border-radius: 16rpx;
-  padding: 0rpx 30rpx;
+  padding: 40rpx 30rpx;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -481,7 +482,7 @@ function handleLogout() {
   align-items: center;
 }
 
-.section-item [class*='icon'] {
+.section-item [class^='icon-_'] {
   font-size: 50rpx;
 }
 

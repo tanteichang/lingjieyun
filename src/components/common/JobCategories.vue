@@ -75,7 +75,7 @@ function handleFilterClick(type: string): void {
   /* #ifdef MP-ALIPAY */
 
   /* #endif */
-  background: #fff;
+  background: transparent;
 }
 /* 分类导航 */
 .category-nav-wrapper {

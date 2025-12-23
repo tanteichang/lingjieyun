@@ -60,7 +60,6 @@ onBeforeMount(() => {
 
 <style scoped>
 .top-navigation {
-  padding-bottom: 20rpx;
   width: 100vw;
 }
 

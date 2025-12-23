@@ -3,7 +3,7 @@
     id="top-navigation"
     title="灵捷云"
     subtitle="科技为基 合规为本 拥军为魂"
-    background="linear-gradient(to bottom, #155FE2 0%,  #cbdbf9 100%)"
+    background="linear-gradient(to bottom, #155FE2 0%, #ffffff 100%)"
   >
     <!-- 顶部搜索栏 -->
     <SearchBar
@@ -12,57 +12,62 @@
       @search-click="showSearch"
     />
   </TopNavigation>
-  <view class="index-container" :style="indexContainerStyle">
-    <PullList
-      ref="pullListRef"
-      refresher-enabled
-      :refreshing="refreshing"
-      @refresh="handleRefresh"
-      @refresherrestore="handleRestore"
-    >
-      <view style="background: linear-gradient(to bottom,  #cbdbf9 0%, #ffffff 30%);">
-        <JobCategories
-          @category-change="selectCategory"
-          @filter-change="selectFilter"
-        />
-      </view>
+  <view class="index-container">
+    <scroll-view :show-scrollbar="false">
+      <JobCategories
+        @category-change="selectCategory"
+        @filter-change="selectFilter"
+      />
 
-      <view class="tab-container">
-        <JobTabs
-          :tab-items="jobTabItems"
-          @tab-click="selectTab"
-          @job-click="handleJobClick"
-          @filter-click="handleFilterClick"
-        />
-      </view>
-      <template v-if="loading">
-        <JobItemSkeleton
-          v-for="index in skeletonCount"
-          :key="`job-skeleton-${index}`"
-        />
-      </template>
-      <template v-else>
-        <JobItem
-          v-for="(job, index) in jobList"
-          :key="index"
-          :job="job"
-          @click="navigateToDetail(job.id)"
-        />
-      </template>
-    </PullList>
+      <wd-sticky
+        id="tab-navigation"
+        ref="tabNavigationRef"
+        :offset-top="tabOffsetTop"
+      >
+        <view class="tab-container">
+          <JobTabs
+            :tab-items="jobTabItems"
+            @tab-click="selectTab"
+            @job-click="handleJobClick"
+            @filter-click="handleFilterClick"
+          />
+        </view>
+      </wd-sticky>
+      <PullList
+        ref="pullListRef"
+        refresher-enabled
+        :refreshing="refreshing"
+        @refresh="handleRefresh"
+        @refresherrestore="handleRestore"
+      >
+        <template v-if="loading">
+          <JobItemSkeleton
+            v-for="index in skeletonCount"
+            :key="`job-skeleton-${index}`"
+          />
+        </template>
+        <template v-else>
+          <JobItem
+            v-for="(job, index) in jobList"
+            :key="index"
+            :job="job"
+            @click="navigateToDetail(job.id)"
+          />
+        </template>
+      </PullList>
+    </scroll-view>
   </view>
 </template>
 
 <script setup lang="ts">
 import type { Job, JobListResponse } from '@/types/job.d.ts'
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import JobCategories from '@/components/common/JobCategories.vue'
 import JobItem from '@/components/common/JobItem.vue'
 import JobItemSkeleton from '@/components/common/JobItemSkeleton.vue'
 import JobTabs from '@/components/common/JobTabs.vue'
 import PullList from '@/components/common/PullList.vue'
 import SearchBar from '@/components/common/SearchBar.vue'
-import Sticky from '@/components/common/Sticky.vue'
 import TopNavigation from '@/components/common/TopNavigation.vue'
 import request from '@/utils/request'
 
@@ -91,12 +96,6 @@ const jobList = ref<Job[]>([])
 const loading = ref<boolean>(false)
 const skeletonCount = 4
 const refresherTriggered = ref<boolean>(false)
-const indexContainerStyle = computed(() => {
-  const offset = tabOffsetTop.value || 0
-  return {
-    height: `calc(100vh - ${offset}px)`,
-  }
-})
 
 // 显示城市选择器
 function showCityPicker(): void {
@@ -224,7 +223,7 @@ onMounted(() => {
         }
       })
       .exec()
-  }, 0)
+  }, 100)
 })
 
 onUnmounted(() => {
@@ -236,6 +235,7 @@ onUnmounted(() => {
 /* 页面容器 */
 .index-container {
   background-color: #f5f5f5;
+  height: calc(100vh - 150rpx);
   overflow-y: scroll;
 }
 
@@ -246,9 +246,5 @@ onUnmounted(() => {
 
 .tab-container {
   width: 100vw;
-  position: sticky;
-  top: 0;
-  background-color: #ffffff;
-  z-index: 100;
 }
 </style>

@@ -76,7 +76,7 @@ const props = defineProps({
   },
   triggerDistance: {
     type: Number,
-    default: 20,
+    default: 30,
   },
   maxDistance: {
     type: Number,
@@ -84,7 +84,7 @@ const props = defineProps({
   },
   indicatorHeight: {
     type: Number,
-    default: 20,
+    default: 30,
   },
   refreshing: {
     type: Boolean,
@@ -95,6 +95,7 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'refresh'): void
   (e: 'load-more'): void
+  (e: 'scroll', scrollTop: number): void
   (e: 'update:refreshing', value: boolean): void
 }>()
 
@@ -153,7 +154,9 @@ const indicatorStyle = computed(() => {
 })
 
 function handleScroll(event: any): void {
-  scrollTop.value = event.detail?.scrollTop || 0
+  const top = event.detail?.scrollTop || 0
+  scrollTop.value = top
+  emit('scroll', top)
 }
 
 function handleTouchStart(event: TouchEvent): void {
@@ -245,9 +248,9 @@ defineExpose({
 }
 
 .pull-indicator {
-  display: flex;
+  /* display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: center; */
   color: #8c92a2;
   overflow: hidden;
 }
@@ -257,8 +260,8 @@ defineExpose({
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 20rpx;
   opacity: 0;
+  gap: 12rpx;
   transition: opacity 0.2s ease;
 }
 

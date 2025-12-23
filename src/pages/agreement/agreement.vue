@@ -1,7 +1,5 @@
 <template>
-  <wd-navbar title="Navbar 导航条" placeholder left-arrow safe-area-inset-top fixed />
-  <!-- 协议内容（使用webview加载html文件） -->
-  <web-view fullscreen="false" />
+  <web-view fullscreen="false" src="http://localhost:3300/mock/html/service.html" />
 </template>
 
 <script setup lang="ts">
